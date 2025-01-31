@@ -17,4 +17,9 @@ export class QuizController {
         const quizId = parseInt(id , 10);
         return this.quizService.getQuizById(quizId);
     }
+
+    @Get('/all')
+    async getAllQuiz(){
+        return this.quizService.getAllQuiz();
+    }
 }

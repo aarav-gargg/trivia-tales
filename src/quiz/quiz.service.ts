@@ -31,13 +31,16 @@ export class QuizService{
 
     async getQuizById(id : number){
         try {
-            console.log("received id" , id)
             const quiz = await this.prisma.quiz.findUnique({
                 where : {
                     id : id
                 } , 
                 include : {
-                    questions : true
+                    questions : {
+                        include : {
+                            options : true
+                        }
+                    }
                 }
             });
 
@@ -55,6 +58,30 @@ export class QuizService{
             }
         } catch (error) {
             return {
+                success : false , 
+                message : error.message
+            }
+        }
+    }
+
+    async getAllQuiz(){
+        try {
+            const response = await this.prisma.quiz.findMany();
+
+            if(!response){
+                return{
+                    success : false , 
+                    message : "NO QUIZ FOUND"
+                }
+            }
+
+            return{
+                success : true ,
+                message : "QUIZ FOUND SUCCESSFULLY",
+                quiz : response
+            }
+        } catch (error) {
+            return{
                 success : false , 
                 message : error.message
             }
